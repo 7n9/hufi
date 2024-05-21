@@ -14,10 +14,6 @@ public class Entry implements Comparable<Entry>{
         return (int) this.freq - e.freq;
     }
 
-    public String print(){
-        return c + " | " + freq;
-    }
-
     Entry left;
     Entry right;
 }

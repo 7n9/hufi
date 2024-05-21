@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -13,10 +14,9 @@ class Huffman {
     public static void main(String[] args) {
         try {
 
-            // File a = new File("ipsum.txt");
-
-            // byte[] bytes = Files.readAllBytes(a.toPath());
-            // String contents = new String(bytes);
+//             File a = new File("ipsum.txt");
+//             byte[] bytes = Files.readAllBytes(a.toPath());
+//             String contents = new String(bytes);
 
             Scanner sc = new Scanner(System.in);
             String contents = sc.nextLine();
@@ -31,81 +31,92 @@ class Huffman {
                     charMap.put(c, charMap.get(c) + 1);
                 }
             }
-            // System.out.println(wordMap.toString());
-            System.out.println("Unique Entries: " + charMap.size());
-            for (Map.Entry entry : charMap.entrySet()) {
-                System.out.println(entry.getKey() + " " + entry.getValue());
-            }
-            System.out.println("\n\n");
+//            System.out.println(wordMap.toString());
+//            System.out.println("Unique Entries: " + charMap.size());
+//            for (Map.Entry entry : charMap.entrySet()) {
+//                System.out.println(entry.getKey() + " " + entry.getValue());
+//            }
 
 
             List<Character> chars = new ArrayList<>(charMap.keySet());
             List<Integer> freqs = new ArrayList<>(charMap.values());
-
             ArrayList<Entry> entries = new ArrayList<Entry>();
             for (int i = 0; i < chars.size(); i++) {
                 entries.add(new Entry(chars.get(i), freqs.get(i)));
             }
-
             Collections.sort(entries);
             Collections.reverse(entries);
 
-            int n = entries.size();
-            char[] charArray = new char[n];
-            int[] charfreq = new int[n];
+//            int n = entries.size();
+//            char[] charArray = new char[n];
+//            int[] charfreq = new int[n];
 
-            for (int i = 0; i < entries.size(); i++) {
-                Entry t = entries.get(i);
-                charArray[i] = t.c;
-                charfreq[i] = t.freq;
-            }
+//            for (int i = 0; i < entries.size(); i++) {
+//                Entry t = entries.get(i);
+//                charArray[i] = t.c;
+//                charfreq[i] = t.freq;
+//            }
 
+            //make q
+            PriorityQueue<Entry> queue = new PriorityQueue<Entry>(entries.size(), new EntryComp());
             for (Entry entry : entries) {
-                System.out.println(entry.print());
-            }
-            System.out.println("\n\n");
-
-            PriorityQueue<Entry> queue = new PriorityQueue<Entry>(n, new EntryComp());
-
-            for (int i = 0; i < n; i++) {
                 Entry temp_entry_node = new Entry();
-                temp_entry_node.c = charArray[i];
-                temp_entry_node.freq = charfreq[i];
+                temp_entry_node.c = entry.c;
+                temp_entry_node.freq = entry.freq;
                 temp_entry_node.left = null;
                 temp_entry_node.right = null;
                 queue.add(temp_entry_node);
             }
 
+            //parse q
             while (queue.size() > 1) {
 
                 Entry left = queue.poll();
                 Entry right = queue.poll();
-                Entry top = new Entry('$', left.freq + right.freq);
+                Entry top = new Entry('\0', left.freq + right.freq);
                 top.left = left;
                 top.right = right;
                 queue.add(top);
             }
 
 
-
             HashMap<Character, String> enc_codes = new HashMap<Character, String>();
             printCode(enc_codes, queue.peek(), "");
-            
-            for (int i = 0; i < strArray.length; i++) {
-                char achar = strArray[i];
-                System.out.println(enc_codes.get(achar));
-                contents = contents.replaceAll(String.valueOf(achar), String.valueOf(enc_codes.get(achar)));
-                System.out.println(contents);
+
+            for (Entry e : entries){
+                System.out.println(e.c + " | " + e.freq + " | " + enc_codes.get(e.c));
             }
-            System.out.println(contents);
-            System.out.println(decodeString(queue.peek(), contents));
-        } catch (Exception e) {
+//            try {
+//                UIManager.setLookAndFeel(
+//                        UIManager.getSystemLookAndFeelClassName());
+//            } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException |
+//                     IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            SwingUtilities.invokeLater(() -> {
+                base frame = new base(queue.peek());
+                frame.setVisible(true);
+            });
+
+//            for (int i = 0; i < strArray.length; i++) {
+//                char achar = strArray[i];
+//                System.out.println(enc_codes.get(achar));
+//                contents = contents.replaceAll(String.valueOf(achar), String.valueOf(enc_codes.get(achar)));
+//                System.out.println(contents);
+//            }
+//            System.out.println(contents);
+//            System.out.println(decodeString(queue.peek(), contents));
+
+
+        } catch (Exception ignored) {
         }
     }
 
     public static void printCode(HashMap<Character, String> e_c, Entry root, String s) {
         if (root.left == null && root.right == null && root.c != '$') {
-            System.out.println(root.c + ":" + s);
+            //System.out.println(root.c + ":" + s);
             if(!e_c.containsKey(root.c)){
                 e_c.put(root.c, s);
             }else{
