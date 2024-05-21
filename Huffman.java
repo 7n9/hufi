@@ -13,10 +13,13 @@ class Huffman {
     public static void main(String[] args) {
         try {
 
-            File a = new File("ipsum.txt");
+            // File a = new File("ipsum.txt");
 
-            byte[] bytes = Files.readAllBytes(a.toPath());
-            String contents = new String(bytes);
+            // byte[] bytes = Files.readAllBytes(a.toPath());
+            // String contents = new String(bytes);
+
+            Scanner sc = new Scanner(System.in);
+            String contents = sc.nextLine();
             char[] strArray = contents.toCharArray();
 
             // Make a frequency map
@@ -73,57 +76,64 @@ class Huffman {
                 queue.add(temp_entry_node);
             }
 
-            Entry root = null;
             while (queue.size() > 1) {
 
-                Entry x = queue.peek();
-                queue.poll();
-                Entry y = queue.peek();
-                queue.poll();
-
-                Entry f = new Entry();
-
-                f.freq = x.freq + y.freq;
-                f.c = '-';
-                f.left = x;
-                f.right = y;
-                root = f;
-
-                queue.add(f);
+                Entry left = queue.poll();
+                Entry right = queue.poll();
+                Entry top = new Entry('$', left.freq + right.freq);
+                top.left = left;
+                top.right = right;
+                queue.add(top);
             }
 
 
 
-            ArrayList<Entry> enc_codes = new ArrayList<Entry>();
-            printCode(enc_codes, root, "");
-
-            System.out.println();
-            int siz = enc_codes.size();
-            char[] fin_chars = new char[siz];
-            int[] codes = new int[siz];
-            for (int i = 0; i < enc_codes.size(); i++) {
-                Entry t = enc_codes.get(i);
-                fin_chars[i] = t.c;
-                codes[i] = t.freq;
-            }
+            HashMap<Character, String> enc_codes = new HashMap<Character, String>();
+            printCode(enc_codes, queue.peek(), "");
             
-            for (int i = 0; i < fin_chars.length; i++) {
-                contents = contents.replaceAll(String.valueOf(fin_chars[i]), String.valueOf(codes[i]));
+            for (int i = 0; i < strArray.length; i++) {
+                char achar = strArray[i];
+                System.out.println(enc_codes.get(achar));
+                contents = contents.replaceAll(String.valueOf(achar), String.valueOf(enc_codes.get(achar)));
+                System.out.println(contents);
             }
             System.out.println(contents);
+            System.out.println(decodeString(queue.peek(), contents));
         } catch (Exception e) {
         }
     }
 
-    public static void printCode(ArrayList<Entry> e_c, Entry root, String s) {
-        if (root.left == null && root.right == null) {
+    public static void printCode(HashMap<Character, String> e_c, Entry root, String s) {
+        if (root.left == null && root.right == null && root.c != '$') {
             System.out.println(root.c + ":" + s);
-            e_c.add(new Entry(root.c, Integer.parseInt(s)));
+            if(!e_c.containsKey(root.c)){
+                e_c.put(root.c, s);
+            }else{
+                e_c.put(root.c, e_c.get(root.c) + s);
+            }
             return;
         }
 
         // l = 0, r = 1
         printCode(e_c, root.left, s + "0");
         printCode(e_c, root.right, s + "1");
+    }
+
+    private static String decodeString(Entry root, String s) {
+        String ans = "";
+        Entry curr = root;
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            if (s.charAt(i) == '0') {
+                curr = curr.left;
+            } else {
+                curr = curr.right;
+            }
+            if (curr.left == null && curr.right == null) {
+                ans += curr.c;
+                curr = root;
+            }
+        }
+        return ans;
     }
 }
