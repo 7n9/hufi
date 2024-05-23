@@ -46,16 +46,13 @@ public class ProperDisplay extends JFrame {
                         strArray = contents.toCharArray();
                         boolean isSameLetter = true;
                         char firstchar = strArray[0];
-                        System.out.println("fc:" + firstchar);
                         for (char c : strArray){
-                            System.out.println("checking " + c +" and " + firstchar);
                             if (c != firstchar) {
                                 isSameLetter = false;
                                 break;
                             }
                         }
 
-                        System.out.println("isl:"+isSameLetter);
                         if(isSameLetter){
                             sameLetterDialog dialog = new sameLetterDialog();
                             dialog.pack();
@@ -161,7 +158,7 @@ public class ProperDisplay extends JFrame {
                         if(!entries.isEmpty()){
                             Entry temp = entries.get(entCounter);
                             entries.remove(temp);
-                            System.out.println(entries.size());
+//                            System.out.println(entries.size());
                             textArea1.setText(oldOutput);
                             printAppend(temp.c + " -> " + enc_codes.get(temp.c));
                             oldOutput = textArea1.getText();
