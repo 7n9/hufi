@@ -193,34 +193,37 @@ public class ProperDisplay extends JFrame {
                             printAppend(outToReplace);
 
                             if(entries.isEmpty()){
-                                textArea1.setText(oldOutput);
-                                printAppend("Output generated:\n");
-                                printAppend(outToReplace);
-                                printAppend("");
-
-                                float contentsbits = contents.toCharArray().length * 8;
-                                float codebits = outToReplace.length() * 2;
-                                printAppend("Input bits: " + (int)contentsbits);
-                                printAppend("Encoded bits: " + (int)codebits);
-
-                                DecimalFormat df = new DecimalFormat();
-                                df.setMaximumFractionDigits(2);
-                                String saved = df.format(100 - (codebits/contentsbits)*100);
-                                printAppend("Saved space [%]: " + saved);
-
-
-                                placeholder.removeAll();
-                                placeholder.updateUI();
-                                clearColors(queue.peek());
-                                treePanel = new TreePanel(queue.peek(), getQueueStringSpecial());
-                                placeholder.setLayout(new BorderLayout());
-                                placeholder.add(treePanel, BorderLayout.CENTER);
-                                placeholder.setVisible(true);
-                                encodeButton.setText("Start");
+                                encodeButton.setText("Finish");
                             }
                             break;
                         }
                         break;
+
+                    case "Finish":
+                        textArea1.setText(oldOutput);
+                        printAppend("Output generated:\n");
+                        printAppend(outToReplace);
+                        printAppend("");
+
+                        float contentsbits = contents.toCharArray().length * 8;
+                        float codebits = outToReplace.length() * 2;
+                        printAppend("Input bits: " + (int)contentsbits);
+                        printAppend("Encoded bits: " + (int)codebits);
+
+                        DecimalFormat df = new DecimalFormat();
+                        df.setMaximumFractionDigits(2);
+                        String saved = df.format(100 - (codebits/contentsbits)*100);
+                        printAppend("Saved space [%]: " + saved);
+
+                        placeholder.removeAll();
+                        placeholder.updateUI();
+                        clearColors(queue.peek());
+                        TreePanel treePanel = new TreePanel(queue.peek(), getQueueStringSpecial());
+                        placeholder.setLayout(new BorderLayout());
+                        placeholder.add(treePanel, BorderLayout.CENTER);
+                        placeholder.setVisible(true);
+                        encodeButton.setText("Start");
+
                 }
 
             }
