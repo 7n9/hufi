@@ -1,12 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.PriorityQueue;
 
 public class TreePanel extends JPanel {
     private Entry root;
+    private String queueContents;
 
-    public TreePanel(Entry root) {
+    public TreePanel(Entry root, String q) {
         super(true);//doublebuff
         this.root = root;
+        this.queueContents = q;
     }
 
     @Override
@@ -24,13 +27,41 @@ public class TreePanel extends JPanel {
         setBackground(Color.gray);
 
         g.setColor(Color.darkGray);
+
+        //g.drawString();
+
+
         g.fillOval(x - 15, y - 15, 30, 30);
+
+
+        g.setColor(Color.darkGray);
+        g.drawString("Queue: " + queueContents, 4, getHeight() - 9);
         g.setColor(Color.lightGray);
-        g.drawString(String.valueOf(node.c), x - 7, y + 5);
+        g.drawString("Queue: " + queueContents, 5, getHeight() - 10);
+
+
+        if(node.c == '\0' && !node.combined.isEmpty()){
+            Graphics2D g2d = (Graphics2D) g.create();
+            FontMetrics fm = g2d.getFontMetrics();
+            g.setColor(Color.darkGray);
+            g.fillRect(x - fm.stringWidth(node.combined)/2 - 3, y - 8, fm.stringWidth(node.combined) + 6, 16);
+            g.setColor(Color.lightGray);
+
+            g.drawString(node.combined, x - fm.stringWidth(node.combined)/2, y + 5);
+            //g.draw3DRect(x - fm.stringWidth(node.combined)/2 - 3, y - 8, fm.stringWidth(node.combined) + 6, 16, true);
+            //g.drawRect(x - fm.stringWidth(node.combined)/2 - 3, y - 8, fm.stringWidth(node.combined) + 6, 16);
+        }else {
+            g.drawString(String.valueOf(node.c), x - 7, y + 5);
+        }
 
         if (node.left != null) {
+            if(node.left.last){
+                g.setColor(Color.red);
+            }else{
+                g.setColor(Color.darkGray);
+            }
+            g.drawLine(x, y+15, x - xOffset, y + 70);
             g.setColor(Color.darkGray);
-            g.drawLine(x, y, x - xOffset, y + 70);
             int a = (x+x-xOffset)/2;
             int b = (y+y+70)/2;
             g.fillOval(a - 8, b - 15, 20, 20);
@@ -40,8 +71,13 @@ public class TreePanel extends JPanel {
         }
 
         if (node.right != null) {
+            if(node.right.last){
+                g.setColor(Color.red);
+            }else{
+                g.setColor(Color.darkGray);
+            }
+            g.drawLine(x, y+15, x + xOffset, y + 70);
             g.setColor(Color.darkGray);
-            g.drawLine(x, y, x + xOffset, y + 70);
             int a = (x+x+xOffset)/2;
             int b = (y+y+70)/2;
             g.fillOval(a - 8, b - 15, 20, 20);

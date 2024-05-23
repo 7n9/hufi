@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
@@ -20,6 +21,9 @@ public class ProperDisplay extends JFrame {
     private String contents;
     private char[] strArray;
     private HashMap<Character, String> enc_codes;
+    private int entCounter = 0;
+    private String oldOutput;
+    private String outToReplace;
 
     public ProperDisplay(){
         encodeButton.addActionListener(new ActionListener() {
@@ -27,20 +31,40 @@ public class ProperDisplay extends JFrame {
             public void actionPerformed(ActionEvent aev) {
                 switch (encodeButton.getText()){
                     case "Start":
+
                         if(inputfield.getText().isEmpty()){
                             break;
                         }
+
+                        //re set / clear
                         entries = new ArrayList<Entry>();
-                        textArea1.setText("");
-                        textArea1.setCaretPosition(textArea1.getDocument().getLength());
                         placeholder.removeAll();
                         placeholder.updateUI();
 
-                        encodeButton.setText("Generate Codes");
-                        textArea1.append("\nCounting frequencies...");
-                        textArea1.setCaretPosition(textArea1.getDocument().getLength());
                         contents = inputfield.getText();
+                        outToReplace = contents;
                         strArray = contents.toCharArray();
+                        boolean isSameLetter = true;
+                        char firstchar = strArray[0];
+                        System.out.println("fc:" + firstchar);
+                        for (char c : strArray){
+                            System.out.println("checking " + c +" and " + firstchar);
+                            if (c != firstchar) {
+                                isSameLetter = false;
+                                break;
+                            }
+                        }
+
+                        System.out.println("isl:"+isSameLetter);
+                        if(isSameLetter){
+                            sameLetterDialog dialog = new sameLetterDialog();
+                            dialog.pack();
+                            dialog.setLocationRelativeTo(null);
+                            dialog.setVisible(true);
+                            break;
+                        }
+
+                        printSet("Counting frequencies...");
 
                         // Make a frequency map
                         HashMap<Character, Integer> charMap = new HashMap<Character, Integer>();
@@ -57,8 +81,7 @@ public class ProperDisplay extends JFrame {
 
                         for (int i = 0; i < chars.size(); i++) {
                             entries.add(new Entry(chars.get(i), freqs.get(i)));
-                            textArea1.append("\n" + chars.get(i) + " -> " + freqs.get(i));
-                            textArea1.setCaretPosition(textArea1.getDocument().getLength());
+                            printAppend(chars.get(i) + " -> " + freqs.get(i));
                         }
 
                         Collections.sort(entries);
@@ -75,11 +98,14 @@ public class ProperDisplay extends JFrame {
                             queue.add(temp_entry_node);
                         }
 
-                        textArea1.append( "\nMaking queue...");
-                        textArea1.setCaretPosition(textArea1.getDocument().getLength());
+                        encodeButton.setText("Continue");
+                        break;
+                    case "Continue":
+
+
 
                         //parse q
-                        while (queue.size() > 1) {
+                        if(queue.size() > 1) {
 
                             Entry left = queue.poll();
                             Entry right = queue.poll();
@@ -87,42 +113,116 @@ public class ProperDisplay extends JFrame {
                             top.left = left;
                             top.right = right;
                             queue.add(top);
+
+
+                            String rightc = String.valueOf(right.c);
+                            String leftc = String.valueOf(left.c);
+                            if(left.c == '\0'){
+                                leftc = left.combined;
+                            }
+                            if(right.c == '\0'){
+                                rightc = right.combined;
+                            }
+                            top.combined = leftc + rightc;
+
+                            printAppend("Combining " + leftc + " and " + rightc);
+                            top.left.last = false;
+                            top.right.last = false;
+
+                            placeholder.removeAll();
+                            placeholder.updateUI();
+                            TreePanel treePanel = new TreePanel(top, getQueueStringSpecial());
+                            placeholder.setLayout(new BorderLayout());
+                            placeholder.add(treePanel, BorderLayout.CENTER);
+
+                            if(queue.size() == 1){
+                                encodeButton.setText("Generate Output");
+                            }
+                            break;
                         }
-
-                        textArea1.append("\nFinished making queue.");
-                        textArea1.setCaretPosition(textArea1.getDocument().getLength());
+                        encodeButton.setText("Generate Output");
                         break;
-                    case "Generate Codes":
-                        encodeButton.setText("Generate Tree");
-                        textArea1.append("\nGenerating Codes...");
-                        textArea1.setCaretPosition(textArea1.getDocument().getLength());
 
+
+                    case "Generate Output":
+
+                        printAppend("Generating codes and replacing...");
                         enc_codes = new HashMap<Character, String>();
                         printCode(enc_codes, queue.peek(), "");
+                        oldOutput = textArea1.getText();
+                        encodeButton.setText("Replace");
 
-                        for (Entry e : entries){
-                            textArea1.append("\n" + (e.c + " -> " + enc_codes.get(e.c)));
-                            textArea1.setCaretPosition(textArea1.getDocument().getLength());
+                    case "Replace":
+
+
+//                        for (Entry e : entries){
+//                            printAppend(e.c + " -> " + enc_codes.get(e.c));;
+//                        }
+                        if(!entries.isEmpty()){
+                            Entry temp = entries.get(entCounter);
+                            entries.remove(temp);
+                            System.out.println(entries.size());
+                            textArea1.setText(oldOutput);
+                            printAppend(temp.c + " -> " + enc_codes.get(temp.c));
+                            oldOutput = textArea1.getText();
+
+                            Entry colornode = queue.peek();
+                            colornode.last = true;
+                            String code = enc_codes.get(temp.c);
+                            char[] codeArray = code.toCharArray();
+                            int colorint = 0;
+
+                            clearColors(queue.peek());
+
+                            while(!(colornode.left == null) && !(colornode.right == null)){
+                                if(codeArray[colorint] == '0'){
+                                    colornode.left.last = true;
+                                    colornode = colornode.left;
+                                }
+                                if(codeArray[colorint] == '1'){
+                                    colornode.right.last = true;
+                                    colornode = colornode.right;
+                                }
+                                colorint++;
+                            }
+                            placeholder.removeAll();
+                            placeholder.updateUI();
+                            TreePanel treePanel = new TreePanel(queue.peek(), getQueueStringSpecial());
+                            placeholder.setLayout(new BorderLayout());
+                            placeholder.add(treePanel, BorderLayout.CENTER);
+                            placeholder.setVisible(true);
+
+                            outToReplace = outToReplace.replaceAll(String.valueOf(temp.c), String.valueOf(enc_codes.get(temp.c)));
+                            printAppend(outToReplace);
+
+                            if(entries.isEmpty()){
+                                textArea1.setText(oldOutput);
+                                printAppend("Output generated:\n");
+                                printAppend(outToReplace);
+                                printAppend("");
+
+                                float contentsbits = contents.toCharArray().length * 8;
+                                float codebits = outToReplace.length() * 2;
+                                printAppend("Input bits: " + (int)contentsbits);
+                                printAppend("Encoded bits: " + (int)codebits);
+
+                                DecimalFormat df = new DecimalFormat();
+                                df.setMaximumFractionDigits(2);
+                                String saved = df.format(100 - (codebits/contentsbits)*100);
+                                printAppend("Saved space [%]: " + saved);
+
+
+                                placeholder.removeAll();
+                                placeholder.updateUI();
+                                clearColors(queue.peek());
+                                treePanel = new TreePanel(queue.peek(), getQueueStringSpecial());
+                                placeholder.setLayout(new BorderLayout());
+                                placeholder.add(treePanel, BorderLayout.CENTER);
+                                placeholder.setVisible(true);
+                                encodeButton.setText("Start");
+                            }
+                            break;
                         }
-                        break;
-                    case "Generate Tree":
-                        encodeButton.setText("Start");
-                        TreePanel treePanel = new TreePanel(queue.peek());
-                        placeholder.setLayout(new BorderLayout());
-                        placeholder.add(treePanel, BorderLayout.CENTER);
-
-                        textArea1.append("\nTree Generated.");
-                        textArea1.append("\nOutput:");
-                        textArea1.setCaretPosition(textArea1.getDocument().getLength());
-
-                        for (int i = 0; i < strArray.length; i++) {
-                            char achar = strArray[i];
-                            contents = contents.replaceAll(String.valueOf(achar), String.valueOf(enc_codes.get(achar)));
-                        }
-
-                        textArea1.append("\n" + contents);
-                        textArea1.setCaretPosition(textArea1.getDocument().getLength());
-                        placeholder.setVisible(true);
                         break;
                 }
 
@@ -142,6 +242,25 @@ public class ProperDisplay extends JFrame {
         });
     }
 
+    private String getQueueStringSpecial(){
+        PriorityQueue<Entry> tempQueue = new PriorityQueue<Entry>(queue);
+        StringBuilder queueEntries = new StringBuilder("[");
+        while(!tempQueue.isEmpty()) {
+            if(tempQueue.peek().c == '\0'){
+                queueEntries.append(tempQueue.poll().combined);
+            }else {
+                queueEntries.append(tempQueue.poll().c);
+            }
+            if(!tempQueue.isEmpty()){
+                queueEntries.append(", ");
+            }else{
+                queueEntries.append("]");
+            }
+        }
+
+        return queueEntries.toString();
+    }
+
     private void createUIComponents(){
         placeholder = new JPanel(){
             @Override
@@ -152,8 +271,29 @@ public class ProperDisplay extends JFrame {
         };
     }
 
+    private void printAppend(String s){
+        textArea1.append("\n" + s);
+        textArea1.setCaretPosition(textArea1.getDocument().getLength());
+    }
+
+    private void printSet(String s){
+        textArea1.setText(s);
+        textArea1.setCaretPosition(textArea1.getDocument().getLength());
+    }
+
+    public static void clearColors(Entry root) {
+        if (root.left == null && root.right == null) {
+            root.last = false;
+            return;
+        }
+        root.last = false;
+        // l = 0, r = 1
+        clearColors(root.left);
+        clearColors(root.right);
+    }
+
     public static void printCode(HashMap<Character, String> e_c, Entry root, String s) {
-        if (root.left == null && root.right == null && root.c != '$') {
+        if (root.left == null && root.right == null && root.c != '\0') {
             //System.out.println(root.c + ":" + s);
             if(!e_c.containsKey(root.c)){
                 e_c.put(root.c, s);

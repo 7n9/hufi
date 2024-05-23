@@ -14,6 +14,8 @@ public class Entry implements Comparable<Entry>{
         return (int) this.freq - e.freq;
     }
 
+    String combined = "";
+    boolean last = false;
     Entry left;
     Entry right;
 }
