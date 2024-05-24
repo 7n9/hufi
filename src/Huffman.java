@@ -21,7 +21,7 @@ class Huffman {
                 pd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 pd.pack();
                 pd.setVisible(true);
-                pd.setTitle("Huffman Tree Visualization");
+                pd.setTitle(StringTranslate.getInstance().translateString("title.string"));
                 pd.setSize(1500, 1000);
                 pd.setLocationRelativeTo(null);
                 pd.setVisible(true);

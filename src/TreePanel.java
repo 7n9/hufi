@@ -35,9 +35,10 @@ public class TreePanel extends JPanel {
 
 
         g.setColor(Color.darkGray);
-        g.drawString("Queue: " + queueContents, 4, getHeight() - 9);
+        String queueString = StringTranslate.getInstance().translateString("queue.string");
+        g.drawString(queueString + ": " + queueContents, 4, getHeight() - 9);
         g.setColor(Color.lightGray);
-        g.drawString("Queue: " + queueContents, 5, getHeight() - 10);
+        g.drawString(queueString + ": " + queueContents, 5, getHeight() - 10);
 
 
         if(node.c == '\0' && !node.combined.isEmpty()){

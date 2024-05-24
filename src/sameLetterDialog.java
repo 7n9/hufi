@@ -11,7 +11,8 @@ public class sameLetterDialog extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setTitle("Too lazy?");
+        setTitle(StringTranslate.getInstance().translateString("dialog.title"));
+        label1.setText(StringTranslate.getInstance().translateString("dialog.content"));
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
