@@ -9,27 +9,22 @@ public class StringTranslate {
     private static StringTranslate instance = new StringTranslate();
 
 
-    public StringTranslate(){
+    public StringTranslate() {
         translateTable = new Properties();
         langFile = new File("lang/en.lang");
-        try
-        {
+        try {
             //translateTable.load(langFile.toURL().openStream());
-            translateTable.load((StringTranslate.class).getResourceAsStream("/lang/pl   .lang"));
-        }
-        catch(IOException ioexception)
-        {
+            translateTable.load((StringTranslate.class).getResourceAsStream("/lang/pl.lang"));
+        } catch (IOException ioexception) {
             ioexception.printStackTrace();
         }
     }
 
-    public static StringTranslate getInstance()
-    {
+    public static StringTranslate getInstance() {
         return instance;
     }
 
-    public String translateString(String s)
-    {
+    public String translateString(String s) {
         return translateTable.getProperty(s);
     }
 

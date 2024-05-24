@@ -27,17 +27,17 @@ public class ProperDisplay extends JFrame {
     private int entCounter = 0;
     private String oldOutput;
     private String outToReplace;
-    
+
     private final StringTranslate st = StringTranslate.getInstance();
 
-    public ProperDisplay(){
+    public ProperDisplay() {
 
         encodeButton.setText(st.translateString("btn.start.string"));
         jlab1.setText(st.translateString("input.string") + ":");
         encodeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent aev) {
-                if(encodeButton.getText().equals(st.translateString("btn.start.string"))) {
+                if (encodeButton.getText().equals(st.translateString("btn.start.string"))) {
                     if (inputfield.getText().isEmpty()) {
                         return;
                     }
@@ -68,7 +68,7 @@ public class ProperDisplay extends JFrame {
                     }
 
                     printSet(st.translateString("desc.countingfreqs"));
-                    
+
 
                     // Make a frequency map
                     HashMap<Character, Integer> charMap = new HashMap<Character, Integer>();
@@ -105,7 +105,7 @@ public class ProperDisplay extends JFrame {
                     encodeButton.setText(st.translateString("btn.continue.string"));
                     return;
                 }
-                if(encodeButton.getText().equals(st.translateString("btn.continue.string"))) {
+                if (encodeButton.getText().equals(st.translateString("btn.continue.string"))) {
 
 
                     //parse q
@@ -129,13 +129,13 @@ public class ProperDisplay extends JFrame {
                         }
                         top.combined = leftc + rightc;
 
-                        
+
                         printAppend(st.translateString("desc.combining") +
                                 " " + leftc +
                                 " " + st.translateString("desc.and") +
                                 " " + rightc
                         );
-                        
+
                         top.left.last = false;
                         top.right.last = false;
 
@@ -155,7 +155,7 @@ public class ProperDisplay extends JFrame {
                 }
 
 
-                if(encodeButton.getText().equals(st.translateString("btn.genout.string"))) {
+                if (encodeButton.getText().equals(st.translateString("btn.genout.string"))) {
 
                     printAppend(st.translateString("desc.generating"));
                     enc_codes = new HashMap<Character, String>();
@@ -164,7 +164,7 @@ public class ProperDisplay extends JFrame {
                     encodeButton.setText(st.translateString("btn.replace.string"));
                 }
 
-                if(encodeButton.getText().equals(st.translateString("btn.replace.string"))) {
+                if (encodeButton.getText().equals(st.translateString("btn.replace.string"))) {
 
 
 //                        for (Entry e : entries){
@@ -214,9 +214,9 @@ public class ProperDisplay extends JFrame {
                     }
                     return;
                 }
-                if(encodeButton.getText().equals(st.translateString("btn.finish.string"))) {
+                if (encodeButton.getText().equals(st.translateString("btn.finish.string"))) {
                     textArea1.setText(oldOutput);
-                    
+
                     printAppend(st.translateString("desc.generated") + "\n");
                     printAppend(outToReplace);
                     printAppend("");
@@ -239,7 +239,7 @@ public class ProperDisplay extends JFrame {
                     placeholder.add(treePanel, BorderLayout.CENTER);
                     placeholder.setVisible(true);
                     encodeButton.setText(st.translateString("btn.start.string"));
-                    if(contents.toLowerCase().contains("somebody once told me") || contents.toLowerCase().contains("world is gonna roll me")){
+                    if (contents.toLowerCase().contains("somebody once told me") || contents.toLowerCase().contains("world is gonna roll me")) {
                         try {
                             Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=L_jWHffIx5E"));
                         } catch (IOException | URISyntaxException e) {
@@ -263,18 +263,18 @@ public class ProperDisplay extends JFrame {
         });
     }
 
-    private String getQueueStringSpecial(){
+    private String getQueueStringSpecial() {
         PriorityQueue<Entry> tempQueue = new PriorityQueue<Entry>(queue);
         StringBuilder queueEntries = new StringBuilder("[");
-        while(!tempQueue.isEmpty()) {
-            if(tempQueue.peek().c == '\0'){
+        while (!tempQueue.isEmpty()) {
+            if (tempQueue.peek().c == '\0') {
                 queueEntries.append(tempQueue.poll().combined);
-            }else {
+            } else {
                 queueEntries.append(tempQueue.poll().c);
             }
-            if(!tempQueue.isEmpty()){
+            if (!tempQueue.isEmpty()) {
                 queueEntries.append(", ");
-            }else{
+            } else {
                 queueEntries.append("]");
             }
         }
@@ -282,8 +282,8 @@ public class ProperDisplay extends JFrame {
         return queueEntries.toString();
     }
 
-    private void createUIComponents(){
-        placeholder = new JPanel(){
+    private void createUIComponents() {
+        placeholder = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -292,12 +292,12 @@ public class ProperDisplay extends JFrame {
         };
     }
 
-    private void printAppend(String s){
+    private void printAppend(String s) {
         textArea1.append("\n" + s);
         textArea1.setCaretPosition(textArea1.getDocument().getLength());
     }
 
-    private void printSet(String s){
+    private void printSet(String s) {
         textArea1.setText(s);
         textArea1.setCaretPosition(textArea1.getDocument().getLength());
     }
@@ -316,9 +316,9 @@ public class ProperDisplay extends JFrame {
     public static void printCode(HashMap<Character, String> e_c, Entry root, String s) {
         if (root.left == null && root.right == null && root.c != '\0') {
             //System.out.println(root.c + ":" + s);
-            if(!e_c.containsKey(root.c)){
+            if (!e_c.containsKey(root.c)) {
                 e_c.put(root.c, s);
-            }else{
+            } else {
                 e_c.put(root.c, e_c.get(root.c) + s);
             }
             return;
@@ -336,7 +336,7 @@ public class ProperDisplay extends JFrame {
         for (int i = 0; i < n; i++) {
             if (s.charAt(i) == '0') {
                 curr = curr.left;
-            }else{
+            } else {
                 curr = curr.right;
             }
             if (curr.left == null && curr.right == null) {

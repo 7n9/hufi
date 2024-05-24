@@ -1,10 +1,11 @@
-public class Entry implements Comparable<Entry>{
+public class Entry implements Comparable<Entry> {
     char c;
     int freq;
 
-    Entry(){}
+    Entry() {
+    }
 
-    Entry(Character c, int f){
+    Entry(Character c, int f) {
         this.c = c;
         this.freq = f;
     }
