@@ -11,9 +11,9 @@ public class StringTranslate {
 
     public StringTranslate() {
         translateTable = new Properties();
-        langFile = new File("lang/en.lang");
+        langFile = new File("lang/pl.lang");
         try {
-            //translateTable.load(langFile.toURL().openStream());
+//            translateTable.load(langFile.toURL().openStream());
             translateTable.load((StringTranslate.class).getResourceAsStream("/lang/pl.lang"));
         } catch (IOException ioexception) {
             ioexception.printStackTrace();

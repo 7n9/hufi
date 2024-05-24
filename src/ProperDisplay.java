@@ -204,7 +204,12 @@ public class ProperDisplay extends JFrame {
                         placeholder.add(treePanel, BorderLayout.CENTER);
                         placeholder.setVisible(true);
 
-                        outToReplace = outToReplace.replaceAll(String.valueOf(temp.c), String.valueOf(enc_codes.get(temp.c)));
+                        String toreplace = String.valueOf(temp.c);
+
+                        if(temp.c == '.'){
+                            toreplace = "\\.";
+                        }
+                        outToReplace = outToReplace.replaceAll(toreplace, String.valueOf(enc_codes.get(temp.c)));
                         printAppend(outToReplace);
 
                         if (entries.isEmpty()) {
