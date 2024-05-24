@@ -11,10 +11,10 @@ public class StringTranslate {
 
     public StringTranslate() {
         translateTable = new Properties();
-        langFile = new File("lang/pl.lang");
+        langFile = new File("lang/" + Huffman.languageChoosen);
         try {
 //            translateTable.load(langFile.toURL().openStream());
-            translateTable.load((StringTranslate.class).getResourceAsStream("/lang/pl.lang"));
+            translateTable.load((StringTranslate.class).getResourceAsStream(Huffman.languageChoosen));
         } catch (IOException ioexception) {
             ioexception.printStackTrace();
         }

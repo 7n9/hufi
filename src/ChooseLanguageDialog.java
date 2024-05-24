@@ -2,17 +2,16 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class sameLetterDialog extends JDialog {
+public class ChooseLanguageDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
-    private JLabel label1;
+    private JComboBox comboBox1;
 
-    public sameLetterDialog() {
+
+    public ChooseLanguageDialog() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setTitle(StringTranslate.getInstance().translateString("dialog.title"));
-        label1.setText(StringTranslate.getInstance().translateString("dialog.content"));
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -22,8 +21,15 @@ public class sameLetterDialog extends JDialog {
     }
 
     private void onOK() {
-        // add your code here
+
+        switch (comboBox1.getSelectedIndex()){
+            case 0:
+                Huffman.languageChoosen = "en.lang";
+                break;
+            case 1:
+                Huffman.languageChoosen = "pl.lang";
+                break;
+        }
         dispose();
     }
-
 }

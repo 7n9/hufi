@@ -12,9 +12,19 @@ import java.util.Scanner;
 
 class Huffman {
 
+    static String languageChoosen = "NULL";
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+            ChooseLanguageDialog dialog = new ChooseLanguageDialog();
+            dialog.pack();
+            dialog.setLocationRelativeTo(null);
+            dialog.setVisible(true);
+
+            if(languageChoosen.equals("NULL")){
+                System.exit(1);
+            }
             SwingUtilities.invokeLater(() -> {
                 ProperDisplay pd = new ProperDisplay();
                 pd.setContentPane(pd.mainpanel);

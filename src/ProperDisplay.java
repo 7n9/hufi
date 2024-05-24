@@ -60,7 +60,7 @@ public class ProperDisplay extends JFrame {
                     }
 
                     if (isSameLetter) {
-                        sameLetterDialog dialog = new sameLetterDialog();
+                        SameLetterDialog dialog = new SameLetterDialog();
                         dialog.pack();
                         dialog.setLocationRelativeTo(null);
                         dialog.setVisible(true);
@@ -206,8 +206,46 @@ public class ProperDisplay extends JFrame {
 
                         String toreplace = String.valueOf(temp.c);
 
-                        if(temp.c == '.'){
-                            toreplace = "\\.";
+
+                        //  \.[]{}()<>*+-=!?^$|
+
+                        switch (temp.c) {
+                            case '.':
+                                toreplace = "\\.";
+                                break;
+                            case '\\':
+                                toreplace = "\\\\";
+                                break;
+                            case '[':
+                                toreplace = "\\[";
+                                break;
+                            case '{':
+                                toreplace = "\\{";
+                                break;
+                            case '$':
+                                toreplace = "\\$";
+                                break;
+                            case '(':
+                                toreplace = "\\(";
+                                break;
+                            case ')':
+                                toreplace = "\\)";
+                                break;
+                            case '*':
+                                toreplace = "\\*";
+                                break;
+                            case '+':
+                                toreplace = "\\+";
+                                break;
+                            case '?':
+                                toreplace = "\\?";
+                                break;
+                            case '^':
+                                toreplace = "\\^";
+                                break;
+                            case '|':
+                                toreplace = "\\|";
+                                break;
                         }
                         outToReplace = outToReplace.replaceAll(toreplace, String.valueOf(enc_codes.get(temp.c)));
                         printAppend(outToReplace);
