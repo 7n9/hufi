@@ -1,3 +1,5 @@
+package src;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -13,8 +15,8 @@ public class StringTranslate {
         translateTable = new Properties();
         langFile = new File("lang/" + Huffman.languageChoosen);
         try {
-//            translateTable.load(langFile.toURL().openStream());
-            translateTable.load((StringTranslate.class).getResourceAsStream(Huffman.languageChoosen));
+            translateTable.load(langFile.toURL().openStream());
+//            translateTable.load((StringTranslate.class).getResourceAsStream(Huffman.languageChoosen));
         } catch (IOException ioexception) {
             ioexception.printStackTrace();
         }

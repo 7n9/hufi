@@ -1,3 +1,5 @@
+package src;
+
 import java.util.Comparator;
 
 public class EntryComp implements Comparator<Entry> {

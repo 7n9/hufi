@@ -1,3 +1,5 @@
+package src;
+
 public class Entry implements Comparable<Entry> {
     char c;
     int freq;
