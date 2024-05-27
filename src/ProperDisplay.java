@@ -214,6 +214,9 @@ public class ProperDisplay extends JFrame {
                             case '.':
                                 toreplace = "\\.";
                                 break;
+                            case ',':
+                                toreplace = ",";
+                                break;
                             case '\\':
                                 toreplace = "\\\\";
                                 break;
@@ -246,6 +249,12 @@ public class ProperDisplay extends JFrame {
                                 break;
                             case '|':
                                 toreplace = "\\|";
+                                break;
+                            case '\n':
+                                toreplace = "\n";
+                                break;
+                            case '\t':
+                                toreplace = "\t";
                                 break;
                         }
                         outToReplace = outToReplace.replaceAll(toreplace, String.valueOf(enc_codes.get(temp.c)));
