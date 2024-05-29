@@ -81,7 +81,7 @@ public class ProperDisplay extends JFrame {
                         }
                     }
 
-                    java.util.List<Character> chars = new ArrayList<>(charMap.keySet());
+                    List<Character> chars = new ArrayList<>(charMap.keySet());
                     List<Integer> freqs = new ArrayList<>(charMap.values());
 
                     for (int i = 0; i < chars.size(); i++) {
@@ -168,13 +168,13 @@ public class ProperDisplay extends JFrame {
                 if (encodeButton.getText().equals(st.translateString("btn.replace.string"))) {
 
 
-//                        for (Entry e : entries){
-//                            printAppend(e.c + " -> " + enc_codes.get(e.c));;
-//                        }
+//                    for (Entry e : entries){
+//                        printAppend(e.c + " -> " + enc_codes.get(e.c));;
+//                    }
                     if (!entries.isEmpty()) {
                         Entry temp = entries.get(entCounter);
                         entries.remove(temp);
-//                            System.out.println(entries.size());
+//                        System.out.println(entries.size());
                         textArea1.setText(oldOutput);
                         printAppend(temp.c + " -> " + enc_codes.get(temp.c));
                         oldOutput = textArea1.getText();
@@ -205,11 +205,8 @@ public class ProperDisplay extends JFrame {
                         placeholder.add(treePanel, BorderLayout.CENTER);
                         placeholder.setVisible(true);
 
-                        String toreplace = String.valueOf(temp.c);
-
-
                         //  \.[]{}()<>*+-=!?^$|
-
+                        String toreplace;
                         switch (temp.c) {
                             case '.':
                                 toreplace = "\\.";
@@ -255,6 +252,9 @@ public class ProperDisplay extends JFrame {
                                 break;
                             case '\t':
                                 toreplace = "\t";
+                                break;
+                            default:
+                                toreplace = String.valueOf(temp.c);
                                 break;
                         }
                         outToReplace = outToReplace.replaceAll(toreplace, String.valueOf(enc_codes.get(temp.c)));

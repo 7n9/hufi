@@ -16,14 +16,11 @@ public class TreePanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+
+        //doublebuff & aa set
         super.paintComponent(g);
-
-
         Graphics2D g2d = (Graphics2D) g.create();
-
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         if (root != null) {
@@ -36,15 +33,9 @@ public class TreePanel extends JPanel {
             return;
         }
         setBackground(Color.gray);
-
         g.setColor(Color.darkGray);
-
         //g.drawString();
-
-
         g.fillOval(x - 15, y - 15, 30, 30);
-
-
         g.setColor(Color.darkGray);
         String queueString = StringTranslate.getInstance().translateString("queue.string");
         g.drawString(queueString + ": " + queueContents, 4, getHeight() - 9);
@@ -63,7 +54,11 @@ public class TreePanel extends JPanel {
             //g.draw3DRect(x - fm.stringWidth(node.combined)/2 - 3, y - 8, fm.stringWidth(node.combined) + 6, 16, true);
             //g.drawRect(x - fm.stringWidth(node.combined)/2 - 3, y - 8, fm.stringWidth(node.combined) + 6, 16);
         }else {
-            g.drawString(String.valueOf(node.c), x - 7, y + 5);
+            if(Character.isWhitespace(node.c)){
+                g.drawString("[" + String.valueOf(node.c) + "]", x - 7, y + 5);
+            }else {
+                g.drawString(String.valueOf(node.c), x - 7, y + 5);
+            }
         }
 
         if (node.left != null) {
